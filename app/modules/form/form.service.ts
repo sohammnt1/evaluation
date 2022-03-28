@@ -59,45 +59,6 @@ const getHistoryRatings = async (studentId: any) => {
     return result;
 }
 
-// const filterAverage = async (filter: any) => {
-//     const { fromDate, toDate, overallAverage, serviceBy } = filter;
-//     let { servicesAvailed, page, itemsPerPage } = filter;
-//     const filters = [];
-//     const filterQuery = [];
-
-//     if (fromDate) {
-//         filterQuery.push({ 'createdAt': { $gte: new Date(fromDate) } });
-//     }
-//     if (toDate) {
-
-//         filterQuery.push({ 'createdAt': { $lt: new Date(toDate) } });
-//     }
-//     if (servicesAvailed) {
-//         servicesAvailed = servicesAvailed.map((service: string) => new ObjectId(service));
-//         filterQuery.push({ 'servicesAvailed': { $in: servicesAvailed } });
-//     }
-//     if (serviceBy) {
-//         filterQuery.push({ 'serviceBy': new ObjectId(serviceBy) });
-//     }
-//     if (overallAverage) {
-//         filterQuery.push({ 'overallAverage': { $gte: +overallAverage }})
-//     }
-//     const match = {
-//         $match: {
-//             $and: filterQuery
-//         }
-//     };
-//     if (filterQuery.length && match && match.$match.$and) {
-//         filters.push(match);
-//     }
-//     if (page && itemsPerPage) {
-//         page = Math.floor(page)
-//         itemsPerPage = Math.floor(itemsPerPage)
-//         filters.push({ $skip: (page - 1) * itemsPerPage });
-//         filters.push({ $limit: itemsPerPage });
-//     }
-//     return formRepo.filterAverage(filters);
-// }
 
 function getNumberOfDays(start: Date, end: Date) {
     const date1 = new Date(start);
@@ -121,6 +82,4 @@ export default {
     addRating,
     getAverage,
     getHistoryRatings
-    // getAveragePerForm,
-    // filterAverage
 }

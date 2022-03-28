@@ -73,49 +73,6 @@ const getHistoryRatings = (studentId: any) => formModel.aggregate([
     { $unwind: "$rating" },
     { $match: { studentId: new ObjectId(studentId) } }
 ])
-// 
-// const filterAverage = (filters: any) => formModel.aggregate([
-//     {
-//         $project: {
-//             name: 1,
-//             email: 1,
-//             age: 1,
-//             ambienceRating: 1,
-//             cleanlinessRating: 1,
-//             serviceRating: 1,
-//             overallRating: 1,
-//             comments: 1,
-//             createdAt: 1,
-//             servicesAvailed : 1,
-//             serviceBy : 1,
-//             overallAverage: {
-//                 $avg: [
-//                     '$ambienceRating',
-//                     '$cleanlinessRating',
-//                     '$serviceRating',
-//                     '$overallRating'
-//                 ]
-//             }
-//         }
-//     },
-//     ...filters,
-//     {
-//         $lookup: {
-//             from: 'users',
-//             localField: 'serviceBy',
-//             foreignField: '_id',
-//             as: 'serviceBy'
-//           }
-//     },
-//     {
-//         $lookup: {
-//             from: 'services',
-//             localField: 'servicesAvailed',
-//             foreignField: '_id',
-//             as: 'servicesAvailed'
-//           }
-//     },
-// ]);
 
 
 export default {
@@ -126,6 +83,4 @@ export default {
     getOne,
     getAverage,
     getHistoryRatings
-    // getAveragePerForm,
-    // filterAverage
 }
