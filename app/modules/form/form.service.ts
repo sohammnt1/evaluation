@@ -1,6 +1,7 @@
 import formRepo from "./form.repo";
 import { IForm } from "./form.types";
 import { ObjectId } from "mongodb"
+import { ROLES } from "../../utility/db_constants";
 
 const createForm = async (form: IForm) => {
     try {
@@ -18,9 +19,7 @@ const displayForms = async () => {
 
 const addRating = async (ratingData: any) => {
     const formData = await formRepo.getOne(ratingData.formId)
-    console.log(formData[0].lastEvaluated, ratingData.currentEvaluation)
     const DateDifference = getNumberOfDays(formData[0].lastEvaluated, ratingData.currentEvaluation)
-    console.log(DateDifference)
     let result
     if (DateDifference >= 7) {
         let dateAddition = await formRepo.addDate(ratingData);
@@ -29,7 +28,7 @@ const addRating = async (ratingData: any) => {
     return result;
 }
 
-const getAverage = async (filter: any) => {
+const getAverage = async (filter: any, role: string, id: string) => {
 
     let { track, overallAverage, page, itemsPerPage } = filter;
     const filters = [];
@@ -38,9 +37,21 @@ const getAverage = async (filter: any) => {
         filters.push({ $skip: (+page - 1) * +itemsPerPage });
         filters.push({ $limit: +itemsPerPage });
     }
-
-    const result = await formRepo.getAverage(track, +overallAverage, filters);
-    return result;
+    let updatedResult = []
+    let result = await formRepo.getAverage(track, +overallAverage, filters);
+    if (role === ROLES.Admin) {
+        // console.log("Admin")
+        return result;
+    }
+    else {
+        for (let r of result) {
+            const ids = r.trainersAssigned.map((id: any) => id.toString());
+            if (ids.includes(id.toString())) {
+                updatedResult.push(r);
+            }
+        }
+        return updatedResult;
+    }
 }
 
 const getHistoryRatings = async (studentId: any) => {
@@ -91,7 +102,6 @@ const getHistoryRatings = async (studentId: any) => {
 function getNumberOfDays(start: Date, end: Date) {
     const date1 = new Date(start);
     const date2 = new Date(end);
-    console.log(date1, date2)
 
     // One day in milliseconds
     const oneDay = 1000 * 60 * 60 * 24;

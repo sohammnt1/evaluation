@@ -66,7 +66,6 @@ const getAverage = async (track: string, overallAverage: number, otherFilters: a
             overallAverage: result.find((re: any) => re._id.toString() === student._id.toString()).overallAverage
         }
     });
-    console.log(students);
     return students;
 }
 

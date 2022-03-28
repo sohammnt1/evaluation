@@ -18,7 +18,6 @@ export const startServer = async () => {
         }
     }
     catch (e) {
-        console.log(e)
         console.log('Failed to start server');
         process.exit(1);
     }

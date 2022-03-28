@@ -57,8 +57,9 @@ router.get('/average', async (
     next: NextFunction
 ) => {
     try {
+        const {role,_id}=res.locals.user
         let filter = req.query
-        const result = await formService.getAverage(filter);
+        const result = await formService.getAverage(filter,role,_id);
         res.send(new ResponseHandler(result));
     } catch (error) {
         next(error);

@@ -53,7 +53,6 @@ const authenticateUser = async (employeeId: string, password: string) => {
 const displayUsers = async (roles: any) => {
     try {
         if(roles){
-        console.log(roles)
         const result = await userRepo.getbyRole(roles);
         return result;
         }
