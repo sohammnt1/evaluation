@@ -7,7 +7,7 @@ import { ROLES } from "../../utility/db_constants";
 
 const router = Router();
 
-router.post('/register', CreateUserValidator, async (
+router.post('/register',permit([ROLES.Admin]), CreateUserValidator, async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -49,7 +49,7 @@ router.get('/display', async (
     }
 });
 
-router.put('/adminDashboard', CreateUserValidator, async (
+router.put('/edit',permit([ROLES.Admin]), CreateUserValidator, async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -63,7 +63,7 @@ router.put('/adminDashboard', CreateUserValidator, async (
     }
 });
 
-router.delete('/adminDashboard/:employeeId', async (
+router.delete('/edit/:employeeId', async (
     req: Request,
     res: Response,
     next: NextFunction

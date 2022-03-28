@@ -7,7 +7,7 @@ import { ROLES } from "../../utility/db_constants";
 
 const router = Router();
 
-router.post('/create', CreateFormValidator, async (
+router.post('/create',permit([ROLES.Admin,ROLES.Trainer]), CreateFormValidator, async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -23,7 +23,7 @@ router.post('/create', CreateFormValidator, async (
 });
 
 //display user by role must be kept open
-router.get('/display', async (
+router.get('/display',permit([ROLES.Admin,ROLES.Trainer]), async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -36,7 +36,7 @@ router.get('/display', async (
     }
 });
 
-router.put('/addRating', async (
+router.put('/addRating',permit([ROLES.Admin,ROLES.Trainer]), async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -51,7 +51,7 @@ router.put('/addRating', async (
 });
 
 
-router.get('/average', async (
+router.get('/average',permit([ROLES.Admin,ROLES.Trainer]), async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -66,7 +66,7 @@ router.get('/average', async (
     }
 });
 
-router.get('/history', async (
+router.get('/history',permit([ROLES.Admin,ROLES.Trainer]), async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -79,34 +79,5 @@ router.get('/history', async (
         next(error);
     }
 });
-// router.get('/averageperform/:id', async (
-//     req: Request,
-//     res: Response,
-//     next: NextFunction
-// ) => {
-//     try {
-//         let id =req.params.id
-//         const result = await formService.getAveragePerForm(id);
-//         res.send(new ResponseHandler(result));
-//     } catch (error) {
-//         next(error);
-//     }
-// });
-
-// router.get('/filteraverage', async (
-//     req: Request,
-//     res: Response,
-//     next: NextFunction
-// ) => {
-//     try {
-//         const filter=req.query;
-//         const result = await formService.filterAverage(filter);
-//         res.send(new ResponseHandler(result));
-//     } catch (error) {
-//         console.log(error);
-//         next(error);
-//     }
-// });
-
 
 export default router;
