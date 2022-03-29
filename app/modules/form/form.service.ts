@@ -40,7 +40,7 @@ const getAverage = async (filter: any, role: string, id: string) => {
     let updatedResult = []
     let result = await formRepo.getAverage(track, +overallAverage, filters);
     if (role === ROLES.Admin) {
-        // console.log("Admin")
+        console.log("Admin")
         return result;
     }
     else {

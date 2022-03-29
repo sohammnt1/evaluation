@@ -4,8 +4,8 @@ import { ResponseHandler } from "./response";
 
 export const permit = (roles: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const roleArray = res.locals.user.roles;
-        if (!roles.some(role => roleArray.includes(role))) {
+        const role = res.locals.user.role;
+        if (!roles.includes(role)) {
             return res.status(401).send(new ResponseHandler({ message: 'Unauthorized' }));
         }
         next();
