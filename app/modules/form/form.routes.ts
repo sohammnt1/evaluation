@@ -43,6 +43,8 @@ router.put('/addRating',permit([ROLES.Admin,ROLES.Trainer]), async (
 ) => {
     try {
         const ratingData = req.body;
+        // ratingData.currentEvaluation=new Date();
+        console.log(ratingData)
         const result = await formService.addRating(ratingData);
         res.send(new ResponseHandler(result));
     } catch (error) {

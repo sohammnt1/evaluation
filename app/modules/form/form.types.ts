@@ -4,7 +4,7 @@ export interface IForm {
     age:Number,
     email:String,
     track:String,
-    lastEvaluated:String,
+    lastEvaluated:Date,
     trainersAssigned:String[],
     rating:object[],
 }

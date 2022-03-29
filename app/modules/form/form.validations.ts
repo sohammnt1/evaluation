@@ -7,7 +7,7 @@ export const CreateFormValidator = [
     body("age").isNumeric().withMessage("Enter a age"),
     body("email").isEmail().withMessage("Enter a valid email."),
     body("track").isString().withMessage("Enter a valid track"),
-    body("lastEvaluated").isString().withMessage("Enter a valid lastEvaluated"),
+    //body("lastEvaluated").isString().withMessage("Enter a valid lastEvaluated"),
     body("trainersAssigned").isArray().withMessage("Enter a valid trainersAssigned"),
     body("rating").isArray().withMessage("Enter a valid rating"),
     validate

@@ -5,6 +5,7 @@ import { ROLES } from "../../utility/db_constants";
 
 const createForm = async (form: IForm) => {
     try {
+        form.lastEvaluated=new Date();
         const result = await formRepo.create(form);
         return result
     } catch (error) {
