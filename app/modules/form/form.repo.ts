@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb"
 
 const create = (form: IForm) => formModel.create(form);
 
-const getAll = () => formModel.find()
+const getAll = () => formModel.find().populate("track",'name').populate("trainersAssigned",'name')
 
 const getOne = (formId: string) => formModel.find({ _id: formId })
 

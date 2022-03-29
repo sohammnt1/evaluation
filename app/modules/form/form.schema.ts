@@ -1,4 +1,5 @@
 import { Schema, model, Types } from "mongoose";
+import trackModel from "../track/track.schema";
 
 class formSchema extends Schema {
     constructor() {
@@ -7,9 +8,9 @@ class formSchema extends Schema {
             name: { type: String, required: true },
             age: { type: Number, required: true },
             email: { type: String, required: true },
-            track: { type: Types.ObjectId, required: true, ref: "user" },
+            track: { type: Types.ObjectId, required: true, ref: "track" },
             lastEvaluated: { type: Date, required: true },
-            trainersAssigned: [{ type: Types.ObjectId, required: true }],
+            trainersAssigned: [{ type: Types.ObjectId, required: true, ref:"user" }],
             rating: [
                 {
                     "LogicRating": { type: Number, required: true },
