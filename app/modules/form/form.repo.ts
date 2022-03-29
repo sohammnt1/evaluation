@@ -13,16 +13,24 @@ const addDate = (ratingData: any) => formModel.updateOne({ _id: new ObjectId(rat
 
 const pushRating = (ratingData: any) => formModel.updateOne({ _id: new ObjectId(ratingData.formId) }, { $push: { rating: ratingData.rating } })
 
-const getAverage = async (track: string, overallAverage: number, otherFilters: any) => {
-    const result = await formModel.aggregate([
+const getAverage = async (filters: any) => {
+    const { page, itemsPerPage, track, overallAverage,trainer} = filters;
+    const queryFilters: any[] = [];
+    const matchQueries: any[] = [];
+    const match = {
+        $match: {
+            $and: matchQueries
+        }
+    };
+    const averages = await formModel.aggregate([
         { $unwind: "$rating" },
         {
             $group: {
                 _id: "$_id",
                 averageLogicRating: { $avg: '$rating.LogicRating' },
                 averageCommunicationRating: { $avg: '$rating.CommunicationRating' },
-                averageAssignmentRating: { $avg: '$rating.AssignmentRating' },
-                averageProActivenessRating: { $avg: '$rating.ProActivenessRating' }
+                averageAssignmentsRating: { $avg: '$rating.AssignmentRating' },
+                averageProactivenessRating: { $avg: '$rating.ProActivenessRating' }
             }
         },
         {
@@ -30,44 +38,65 @@ const getAverage = async (track: string, overallAverage: number, otherFilters: a
                 _id: 1,
                 averageLogicRating: 1,
                 averageCommunicationRating: 1,
-                averageAssignmentRating: 1,
-                averageProActivenessRating: 1,
-                overallAverage: {
+                averageAssignmentsRating: 1,
+                averageProactivenessRating: 1,
+                averageRating: {
                     $avg: [
                         '$averageLogicRating',
                         '$averageCommunicationRating',
-                        '$averageAssignmentRating',
-                        '$averageProActivenessRating'
+                        '$averageAssignmentsRating',
+                        '$averageProactivenessRating'
                     ]
                 }
             }
-        },
-        { $match: { 'overallAverage': { $gte: overallAverage } } },
-        { $project: { _id: 1, overallAverage: 1 } }
+        }
     ]);
-    const ids = result.reduce((accumulator, currValue) => {
-        accumulator.push(currValue._id);
-        return accumulator;
-    }, []);
+    if (overallAverage) {
+        const ids = averages.reduce((accumulator, currValue) => {
+            if (currValue.averageRating > overallAverage)
+                accumulator.push(currValue._id);
+            return accumulator;
+        }, []);
+        matchQueries.push({ '_id': { $in: ids } });
+    }
+    if (track) {
+        matchQueries.push({ 'track': new ObjectId(track) });
+    }
+    if (trainer) {
+        matchQueries.push({ 'assignedTrainers': new ObjectId(trainer) });
+    }
+    if (matchQueries.length) queryFilters.push(match);
+    if (page && itemsPerPage) {
+        queryFilters.push({ $skip: (+page - 1) * +itemsPerPage });
+        queryFilters.push({ $limit: +itemsPerPage });
+    }
     let students = await formModel.aggregate([
+        ...queryFilters,
         {
-            $match: {
-                $or: [
-                    { '_id': { $in: ids } },
-                    { 'track': track }
-                ]
-            },
+            $lookup: {
+                from: 'tracks',
+                localField: 'track',
+                foreignField: '_id',
+                as: 'track'
+            }
         },
-        ...otherFilters
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'trainersAssigned',
+                foreignField: '_id',
+                as: 'trainersAssigned'
+            }
+        }
     ]);
-    students = students.map((student: any) => {
+    students = students.map((employee: any) => {
         return {
-            ...student,
-            overallAverage: result.find((re: any) => re._id.toString() === student._id.toString()).overallAverage
+            ...employee,
+            averages: averages.find((re: any) => re._id.toString() === employee._id.toString())
         }
     });
     return students;
-}
+};
 
 const getHistoryRatings = (studentId: any) => formModel.aggregate([
     { $unwind: "$rating" },

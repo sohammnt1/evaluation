@@ -30,16 +30,8 @@ const addRating = async (ratingData: any) => {
 }
 
 const getAverage = async (filter: any, role: string, id: string) => {
-
-    let { track, overallAverage, page, itemsPerPage } = filter;
-    const filters = [];
-
-    if (page && itemsPerPage) {
-        filters.push({ $skip: (+page - 1) * +itemsPerPage });
-        filters.push({ $limit: +itemsPerPage });
-    }
-    let updatedResult = []
-    let result = await formRepo.getAverage(track, +overallAverage, filters);
+    let updatedResult=[]
+    let result = await formRepo.getAverage(filter);
     if (role === ROLES.Admin) {
         console.log("Admin")
         return result;
