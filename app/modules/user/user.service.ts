@@ -4,7 +4,7 @@ import { generateToken } from "../../utility/jwt";
 import { IUser } from "./user.types";
 import { generate } from "generate-password";
 import * as shortid from "shortid";
-import { transporter } from "../../utility/nodemailer";
+import sgMail from "@sendgrid/mail";
 
 const createUser = async (user: IUser) => {
   try {
@@ -19,20 +19,17 @@ const createUser = async (user: IUser) => {
     };
     const result = await userRepo.create(userData);
 
-    var mailOptions = {
-      from: "soham@coditas.com",
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+    const msg = {
+      from: "testingformail797@gmail.com",
       to: userData.email,
       subject: "Account Sucessfully Created",
-      text: `Dear,${userData.name}. Your Account has been created here are the login credentials. UserId: ${userData.employeeId} Password:${password}`,
+      text: `Dear,${userData.name}. Your Account has been created here are the login credentials. EmployeeId: ${userData.employeeId} Password:${password}`,
     };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
+    const a = await sgMail.send(msg);
+    if (a) {
+      console.log("Email sent");
+    }
 
     return result;
   } catch (error) {
