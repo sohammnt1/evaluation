@@ -4,11 +4,11 @@ import { validationResult } from "express-validator";
 import { ResponseHandler } from "./response";
 
 const validate = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).send(new ResponseHandler(null, errors));
-    }
-    next();
-}
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).send(new ResponseHandler(null, errors));
+  }
+  next();
+};
 
 export default validate;

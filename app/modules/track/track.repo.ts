@@ -1,7 +1,7 @@
 import trackModel from "./track.schema";
 
-const getAll = () => trackModel.find()
+const getAll = () => trackModel.find();
 
-export default {    
-    getAll,
-}
+export default {
+  getAll,
+};
