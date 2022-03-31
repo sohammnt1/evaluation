@@ -7,74 +7,74 @@ import { ROLES } from "../../utility/db_constants";
 
 const router = Router();
 
-router.post('/register',permit([ROLES.Admin]), CreateUserValidator, async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+router.post(
+  "/register",
+  permit([ROLES.Admin]),
+  CreateUserValidator,
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = req.body;
-        const result = await userService.createUser(user);
-        res.send(new ResponseHandler(result));
+      const user = req.body;
+      const result = await userService.createUser(user);
+      res.send(new ResponseHandler(result));
     } catch (error) {
-        next(error);
+      next(error);
     }
-});
+  }
+);
 
-router.post('/login', LoginUserValidator, async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+router.post(
+  "/login",
+  LoginUserValidator,
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let { employeeId, password } = req.body;
-        const result = await userService.authenticateUser(employeeId, password);
-        res.send(new ResponseHandler(result));
+      let { employeeId, password } = req.body;
+      const result = await userService.authenticateUser(employeeId, password);
+      res.send(new ResponseHandler(result));
     } catch (error) {
-        next(error);
+      next(error);
     }
-});
+  }
+);
 
-router.get('/display', async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+router.get(
+  "/display",
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { role } = req.query;
-        const result = await userService.displayUsers(role);
-        res.send(new ResponseHandler(result));
+      const role = req.query.role as string;
+      const result = await userService.displayUsers(role);
+      res.send(new ResponseHandler(result));
     } catch (error) {
-        next(error);
+      next(error);
     }
-});
+  }
+);
 
-router.put('/edit',permit([ROLES.Admin]), CreateUserValidator, async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+router.put(
+  "/edit",
+  permit([ROLES.Admin]),
+  CreateUserValidator,
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const updated_data = req.body;
-        const result = await userService.editUser(updated_data);
-        res.send(new ResponseHandler(result));
+      const updated_data = req.body;
+      const result = await userService.editUser(updated_data);
+      res.send(new ResponseHandler(result));
     } catch (error) {
-        next(error);
+      next(error);
     }
-});
+  }
+);
 
-router.delete('/edit/:employeeId', async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+router.delete(
+  "/edit/:employeeId",
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const employeeId = req.params.employeeId;
-        const result = await userService.deleteUser(employeeId);
-        res.send(new ResponseHandler(result));
+      const employeeId = req.params.employeeId;
+      const result = await userService.deleteUser(employeeId);
+      res.send(new ResponseHandler(result));
     } catch (error) {
-        next(error);
+      next(error);
     }
-});
+  }
+);
 
 export default router;
