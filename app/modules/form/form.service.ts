@@ -15,7 +15,7 @@ const addRating = async (ratingData: {
   currentEvaluation: Date;
   rating: object;
 }) => {
-  ratingData.currentEvaluation = new Date();
+  //ratingData.currentEvaluation = new Date();
   const formData = await formRepo.getOne(ratingData.formId);
   const DateDifference = getNumberOfDays(
     formData[0].lastEvaluated,
@@ -25,8 +25,9 @@ const addRating = async (ratingData: {
   if (DateDifference >= 7) {
     await formRepo.addDate(ratingData);
     result = await formRepo.pushRating(ratingData);
+    return result;
   }
-  return result;
+  throw "Rating Cannot be added as date not exceeded by 7 days";
 };
 
 const getAverage = async (filter: Ifilter, role: string, id: string) => {

@@ -4,7 +4,12 @@ class formSchema extends Schema {
   constructor() {
     super(
       {
-        studentId: { type: Types.ObjectId, required: true, ref: "user" },
+        studentId: {
+          type: Types.ObjectId,
+          required: true,
+          ref: "user",
+          unique: true,
+        },
         track: { type: Types.ObjectId, required: true, ref: "track" },
         lastEvaluated: { type: Date, required: true },
         trainersAssigned: [

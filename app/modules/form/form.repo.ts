@@ -40,7 +40,7 @@ const pushRating = (ratingData: {
   );
 
 const getAverage = async (filters: Ifilter) => {
-  const { page, itemsPerPage, track, overallAverage, trainer } = filters;
+  const { page, itemsPerPage, track, overallAverage } = filters;
   const queryFilters: any[] = [];
   const matchQueries: any[] = [];
   const match = {
@@ -88,9 +88,6 @@ const getAverage = async (filters: Ifilter) => {
   if (track) {
     matchQueries.push({ track: new ObjectId(track) });
   }
-  if (trainer) {
-    matchQueries.push({ assignedTrainers: new ObjectId(trainer) });
-  }
   if (matchQueries.length) queryFilters.push(match);
   if (page && itemsPerPage) {
     queryFilters.push({ $skip: (+page - 1) * +itemsPerPage });
@@ -133,7 +130,7 @@ const getAverage = async (filters: Ifilter) => {
         lastEvaluated: 1,
         "trainersAssigned._id": 1,
         "trainersAssigned.name": 1,
-        rating: 1,
+        //rating: 1,
         averages: 1,
       },
     },
