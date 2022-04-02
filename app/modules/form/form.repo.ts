@@ -122,7 +122,7 @@ const getAverage = async (filters: Ifilter) => {
     {
       $project: {
         _id: 1,
-        studentId: 1,
+        //studentId: 1,
         name: 1,
         age: 1,
         email: 1,
@@ -130,8 +130,9 @@ const getAverage = async (filters: Ifilter) => {
         lastEvaluated: 1,
         "trainersAssigned._id": 1,
         "trainersAssigned.name": 1,
-        //rating: 1,
-        averages: 1,
+        "student._id": 1,
+        "student.name": 1,
+        "student.email": 1,
       },
     },
   ]);
@@ -171,7 +172,7 @@ const getHistoryRatings = (studentId: string) =>
         from: "users",
         localField: "studentId",
         foreignField: "_id",
-        as: "student",
+        as: "studentId",
       },
     },
   ]);
