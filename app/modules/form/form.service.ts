@@ -1,28 +1,21 @@
 import formRepo from "./form.repo";
-import { IForm } from "./form.types";
-import { ObjectId } from "mongodb";
+import { IForm, Ifilter } from "./form.types";
 import { ROLES } from "../../utility/db_constants";
 
-const createForm = async (form: IForm) => {
-  try {
-    form.lastEvaluated = new Date();
-    const result = await formRepo.create(form);
-    return result;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const displayForms = async () => {
-  const result = formRepo.getAll();
+const createForm = (form: IForm) => {
+  form.lastEvaluated = new Date();
+  const result = formRepo.create(form);
   return result;
 };
+
+const displayForms = () => formRepo.getAll();
 
 const addRating = async (ratingData: {
   formId: string;
   currentEvaluation: Date;
   rating: object;
 }) => {
+  ratingData.currentEvaluation = new Date();
   const formData = await formRepo.getOne(ratingData.formId);
   const DateDifference = getNumberOfDays(
     formData[0].lastEvaluated,
@@ -30,20 +23,20 @@ const addRating = async (ratingData: {
   );
   let result;
   if (DateDifference >= 7) {
-    let dateAddition = await formRepo.addDate(ratingData);
+    await formRepo.addDate(ratingData);
     result = await formRepo.pushRating(ratingData);
   }
   return result;
 };
 
-const getAverage = async (filter: any, role: string, id: string) => {
+const getAverage = async (filter: Ifilter, role: string, id: string) => {
   let updatedResult = [];
   let result = await formRepo.getAverage(filter);
   if (role === ROLES.Admin) {
     return result;
   } else {
     for (let r of result) {
-      const ids = r.trainersAssigned.map((id: any) => id.toString());
+      const ids = r.trainersAssigned.map((id: string) => id.toString());
       if (ids.includes(id.toString())) {
         updatedResult.push(r);
       }

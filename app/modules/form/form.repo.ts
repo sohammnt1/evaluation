@@ -1,16 +1,23 @@
 import formModel from "./form.schema";
-import { IForm } from "./form.types";
+import { IForm, Ifilter } from "./form.types";
 import { ObjectId } from "mongodb";
+import { IUser } from "../user/user.types";
 
 const create = (form: IForm) => formModel.create(form);
 
 const getAll = () =>
   formModel
     .find()
+    .populate("studentId", "name")
     .populate("track", "name")
     .populate("trainersAssigned", "name");
 
-const getOne = (formId: string) => formModel.find({ _id: formId });
+const getOne = (formId: string) =>
+  formModel
+    .find({ _id: formId })
+    // .populate("user", { name: 1, age: 1, email: 1 })
+    .populate("track", "name")
+    .populate("trainersAssigned", "name");
 
 const addDate = (ratingData: {
   formId: string;
@@ -32,7 +39,7 @@ const pushRating = (ratingData: {
     { $push: { rating: ratingData.rating } }
   );
 
-const getAverage = async (filters: any) => {
+const getAverage = async (filters: Ifilter) => {
   const { page, itemsPerPage, track, overallAverage, trainer } = filters;
   const queryFilters: any[] = [];
   const matchQueries: any[] = [];
@@ -108,6 +115,14 @@ const getAverage = async (filters: any) => {
       },
     },
     {
+      $lookup: {
+        from: "users",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student",
+      },
+    },
+    {
       $project: {
         _id: 1,
         studentId: 1,
@@ -123,11 +138,11 @@ const getAverage = async (filters: any) => {
       },
     },
   ]);
-  students = students.map((employee: any) => {
+  students = students.map((employee: IUser) => {
     return {
       ...employee,
       averages: averages.find(
-        (re: any) => re._id.toString() === employee._id.toString()
+        (re: { _id: string }) => re._id.toString() === employee._id.toString()
       ),
     };
   });
@@ -138,6 +153,30 @@ const getHistoryRatings = (studentId: string) =>
   formModel.aggregate([
     { $unwind: "$rating" },
     { $match: { studentId: new ObjectId(studentId) } },
+    {
+      $lookup: {
+        from: "tracks",
+        localField: "track",
+        foreignField: "_id",
+        as: "track",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "trainersAssigned",
+        foreignField: "_id",
+        as: "trainersAssigned",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student",
+      },
+    },
   ]);
 
 export default {

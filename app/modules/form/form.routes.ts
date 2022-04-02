@@ -44,7 +44,6 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const ratingData = req.body;
-      // ratingData.currentEvaluation=new Date();
       const result = await formService.addRating(ratingData);
       res.send(new ResponseHandler(result));
     } catch (error) {
