@@ -7,7 +7,7 @@ export const generateToken = (user: IUser) => {
   const { JWT_SECRET } = process.env;
   if (JWT_SECRET) {
     const token = sign(JSON.parse(JSON.stringify(user)), JWT_SECRET);
-    return { token: token };
+    return token;
   }
   throw new Error("Internal Failure");
 };
