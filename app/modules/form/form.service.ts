@@ -36,6 +36,27 @@ const addRating = async (ratingData: {
 const getAverage = async (filter: Ifilter, role: string, id: string) => {
   let updatedResult = [];
   let result = await formRepo.getAverage(filter);
+  for (let i in result) {
+    console.log(i);
+
+    result[i].averages.averageLogicRating = parseFloat(
+      result[i].averages.averageLogicRating
+    ).toFixed(2);
+    result[i].averages.averageCommunicationRating = parseFloat(
+      result[i].averages.averageCommunicationRating
+    ).toFixed(2);
+    result[i].averages.averageAssignmentsRating = parseFloat(
+      result[i].averages.averageAssignmentsRating
+    ).toFixed(2);
+    result[i].averages.averageProactivenessRating = parseFloat(
+      result[i].averages.averageProactivenessRating
+    ).toFixed(2);
+    result[i].averages.averageRating = parseFloat(
+      result[i].averages.averageRating
+    ).toFixed(2);
+  }
+  console.log(result);
+
   if (role === ROLES.Admin) {
     return result;
   } else {
