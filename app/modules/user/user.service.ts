@@ -26,10 +26,7 @@ const createUser = async (user: IUser) => {
       subject: "Account Sucessfully Created",
       text: `Dear,${userData.name}. Your Account has been created here are the login credentials. EmployeeId: ${userData.employeeId} Password:${password}`,
     };
-    //const a = await sgMail.send(msg);
-    // if (a) {
-    //   console.log("Email sent");
-    // }
+    // await sgMail.send(msg);
 
     return result;
   } catch (error) {

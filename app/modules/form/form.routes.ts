@@ -17,7 +17,6 @@ router.post(
       const result = await formService.createForm(form);
       res.send(new ResponseHandler(result));
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
