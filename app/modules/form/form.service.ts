@@ -15,7 +15,7 @@ const addRating = async (ratingData: {
   currentEvaluation: Date;
   rating: object;
 }) => {
-  //ratingData.currentEvaluation = new Date();
+  ratingData.currentEvaluation = new Date();
   const formData = await formRepo.getOne(ratingData.formId);
   const DateDifference = getNumberOfDays(
     formData[0].lastEvaluated,
