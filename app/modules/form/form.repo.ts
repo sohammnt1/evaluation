@@ -5,17 +5,18 @@ import { IUser } from "../user/user.types";
 
 const create = (form: IForm) => formModel.create(form);
 
-const getAll = () =>
+const getAll = (page: number, itemsPerPage: number) =>
   formModel
     .find()
     .populate("studentId", "name")
     .populate("track", "name")
-    .populate("trainersAssigned", "name");
+    .populate("trainersAssigned", "name")
+    .skip((page - 1) * itemsPerPage)
+    .limit(itemsPerPage);
 
 const getOne = (formId: string) =>
   formModel
     .find({ _id: formId })
-    // .populate("user", { name: 1, age: 1, email: 1 })
     .populate("track", "name")
     .populate("trainersAssigned", "name");
 
@@ -122,7 +123,6 @@ const getAverage = async (filters: Ifilter) => {
     {
       $project: {
         _id: 1,
-        //studentId: 1,
         name: 1,
         age: 1,
         email: 1,

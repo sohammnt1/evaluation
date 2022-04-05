@@ -28,7 +28,9 @@ router.get(
   permit([ROLES.Admin, ROLES.Trainer]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await formService.displayForms();
+      const page = req.query.page as string;
+      const itemsPerPage = req.query.itemsPerPage as string;
+      const result = await formService.displayForms(+page, +itemsPerPage);
       res.send(new ResponseHandler(result));
     } catch (error) {
       next(error);

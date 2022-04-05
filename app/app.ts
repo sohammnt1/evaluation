@@ -1,13 +1,13 @@
 import express from "express";
 import { checkAdmin } from "./utility/checkadmin";
-import { user_Connection } from "./connections/connect.mongo";
+import { mongoConnection } from "./connections/connect.mongo";
 import { registerRoutes } from "./routes";
 import { populate } from "./utility/db_constants";
 
 export const startServer = async () => {
   try {
     const app = express();
-    await user_Connection();
+    await mongoConnection();
     await checkAdmin();
     await populate();
     registerRoutes(app);

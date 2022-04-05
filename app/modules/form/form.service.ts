@@ -8,7 +8,8 @@ const createForm = (form: IForm) => {
   return result;
 };
 
-const displayForms = () => formRepo.getAll();
+const displayForms = (page: number, itemsPerPage: number) =>
+  formRepo.getAll(page, itemsPerPage);
 
 const addRating = async (ratingData: {
   formId: string;
